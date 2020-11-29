@@ -24,8 +24,8 @@ while True:
     
     # Clear Variables
     wolfram_res = None
-    wiki_res = None
-    popup = None
+    wiki_res    = None
+    popup       = None
 
     try:
         try:
@@ -37,13 +37,24 @@ while True:
             wiki_res = wikipedia.summary(values[0], sentences=2);
         except:
             pass  
-        available_res = wiki_res if wiki_res else wolfram_res;
-        engine.say(available_res)
-        engine.runAndWait()
-        popup = ('Wolfram Result: ' + wolfram_res, 'Wikipedia Result: '+ wiki_res) if wolfram_res and wiki_res else ('Wikipedia Result: '+ wiki_res);
-        print('This is the current popup', popup)
-        sg.Popup(popup);
-        print(values[0])
+
+        if wolfram_res != None or wiki_res != None:
+            if wolfram_res and wiki_res != None:
+                popup = ('Wolfram Result: ' + wolfram_res, 'Wikipedia Result: '+ wiki_res) 
+            elif wiki_res != None:
+                popup = ('Wikipedia Result: '+ wiki_res);
+            elif wolfram_res != None:
+                popup = ('Wolfram Result: '+ wiki_res);
+            else:
+                engine.say("Sorry.")
+                engine.runAndWait()    
+            print('This is the current popup', popup)
+            engine.say(popup)
+            sg.PopupNonBlocking(popup)
+            engine.runAndWait()
+        else:
+            engine.say("Sorry Sir, Could not find anything.")
+            engine.runAndWait()   
           
     except:
         engine.say("Could not find anything, sir.")
@@ -57,5 +68,4 @@ window.close()
 # wolframalpha Website:   https://developer.wolframalpha.com/portal/myapps/index.html
 # Wikipedia Pypi:         https://pypi.org/project/wikipedia/ 
 
-
-# https://youtu.be/NZMTWBpLUa4?t=1470
+# To Add Speech Recognition: https://medium.com/towards-artificial-intelligence/creating-a-voice-recognition-application-with-python-57d8c3e55256
