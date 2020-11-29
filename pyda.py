@@ -22,16 +22,31 @@ while True:
         break
     engine = pyttsx3.init()
     
+    # Clear Variables
+    wolfram_res = None
+    wiki_res = None
+    popup = None
+
     try:
-        res = client.query(values[0]);
-        wolfram_res = next(res.results).text;
-        wiki_res = wikipedia.summary(values[0], sentences=2);
-        sg.Popup('Wolfram Result: ' + wolfram_res, 'Wikipedia Result: '+ wiki_res);
-        engine.say(wolfram_res)
+        try:
+            res = client.query(values[0]);
+            wolfram_res = next(res.results).text;
+        except:
+            pass   
+        try:
+            wiki_res = wikipedia.summary(values[0], sentences=2);
+        except:
+            pass  
+        available_res = wiki_res if wiki_res else wolfram_res;
+        engine.say(available_res)
         engine.runAndWait()
+        popup = ('Wolfram Result: ' + wolfram_res, 'Wikipedia Result: '+ wiki_res) if wolfram_res and wiki_res else ('Wikipedia Result: '+ wiki_res);
+        print('This is the current popup', popup)
+        sg.Popup(popup);
         print(values[0])
+          
     except:
-        engine.say("Couldn't find anything.")
+        engine.say("Could not find anything, sir.")
         engine.runAndWait()
     
 # Finish up by removing from the screen
